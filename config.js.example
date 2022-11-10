@@ -1,0 +1,14 @@
+module.exports = {
+    domain: 'ping.example.com',
+    serverPort: 3000, // port that the main server listens on
+    servers: [
+        {
+            name: 'US-West 1',
+            domain: 'us-west1.example.com'
+        },
+        {
+            name: 'US-West 2',
+            domain: 'us-west2.example.com'
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ping-test",
+  "version": "1.0.0",
+  "description": "A tool to test your ping to servers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MooCowGalaxy/ping-test.git"
+  },
+  "author": "MooCowGalaxy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MooCowGalaxy/ping-test/issues"
+  },
+  "homepage": "https://github.com/MooCowGalaxy/ping-test#readme",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "tailwindcss": "^3.2.3",
+    "ws": "^8.11.0"
+  }
+}

@@ -39,7 +39,8 @@ function setStatus(id, status) { // 0: offline, 1: connecting, 2: online
 function createWebsocket(id) {
     const server = servers[id];
 
-    const connectionType = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    // const connectionType = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    const connectionType = 'wss';
 
     const ws = new WebSocket(`${connectionType}://${server.domain}`);
     setStatus(id, 1);
@@ -54,13 +55,18 @@ function createWebsocket(id) {
         const ping = Date.now() - time;
 
         setPing(id, ping);
-    }
-    ws.onclose = () => {
+    };
+    ws.onclose = (reason) => {
+        console.log('ws closed');
+        console.log(reason);
         setStatus(id, 0);
         setTimeout(() => {
             createWebsocket(id);
         }, 5000);
-    }
+    };
+    ws.onerror = (error) => {
+        console.error(error);
+    };
 
     return ws;
 }

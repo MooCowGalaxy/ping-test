@@ -68,7 +68,7 @@ function createWebsocket(id) {
         console.error(error);
     };
 
-    return ws;
+    servers[id].ws = ws;
 }
 function initializeServer(server) {
     const serverName = server.name.toLowerCase().replaceAll(' ', '-');
@@ -93,7 +93,7 @@ function initializeServer(server) {
         status: 1,
         ping: null
     });
-    servers[id].ws = createWebsocket(id);
+    createWebsocket(id);
 }
 
 $(document).ready(() => {

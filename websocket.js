@@ -8,7 +8,6 @@ wss.on('connection', (ws) => {
         try {
             parseInt(message);
         } catch (e) {
-            ws.disconnect();
             return;
         }
 

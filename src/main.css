@@ -5,3 +5,11 @@
 * {
     font-family: 'Noto Sans', sans-serif;
 }
+.fade {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+}
+.fade-transparent {
+    opacity: 0;
+    user-select: none;
+}

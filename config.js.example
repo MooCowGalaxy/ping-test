@@ -1,6 +1,7 @@
 module.exports = {
     domain: 'ping.example.com',
     serverPort: 3000, // port that the main server listens on
+    websocketPort: 3001,
     servers: [
         {
             name: 'US-West 1',

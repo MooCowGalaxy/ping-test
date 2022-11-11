@@ -60,6 +60,7 @@ function createWebsocket(id) {
         console.log('ws closed');
         console.log(reason);
         setStatus(id, 0);
+        setPing(id, null);
         setTimeout(() => {
             createWebsocket(id);
         }, 5000);

@@ -5,6 +5,10 @@
 * {
     font-family: 'Noto Sans', sans-serif;
 }
+body {
+    background-color: #111;
+    color: white;
+}
 .fade {
     transition: opacity 0.5s ease-in-out;
     opacity: 1;

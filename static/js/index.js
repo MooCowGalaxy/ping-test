@@ -1,6 +1,18 @@
 const servers = []; // {name, serverName, domain, ws, status, ping}
-const colors = ['text-red-400', 'text-amber-400', 'text-green-400'];
+const backgroundColors = ['bg-red-400', 'bg-amber-400', 'bg-green-400'];
+const textColors = ['text-red-400', 'text-amber-400', 'text-green-400'];
+let interval;
 
+function setPingInterval(seconds = 5) {
+    if (interval !== undefined) clearInterval(interval);
+    interval = setInterval(() => {
+        for (const server of servers) {
+            if (server.status === 2) {
+                sendPing(server.ws);
+            }
+        }
+    }, seconds * 1000);
+}
 function sendPing(ws) {
     try {
         ws.send(Date.now().toString());
@@ -8,20 +20,21 @@ function sendPing(ws) {
         console.error(e);
     }
 }
-function setPing(id, ping) { // null for N/A, number for ms
+function setPing(id, ping) { // null for N/A, number for ms (-1 for connecting)
     const serverName = servers[id].serverName;
     const serverPing = $(`#${serverName}-ping`);
 
-    for (const color of colors) serverPing.removeClass(color);
-    serverPing.text(ping === null ? 'N/A' : `${ping}ms`);
+    for (const color of textColors) serverPing.removeClass(color);
+    serverPing.text(ping === null ? 'N/A' : ping === -1 ? 'Connecting' : `${ping}ms`);
     if (ping !== null) {
         let color;
-        if (ping < 100) {
+        if (ping === -1) {
+        } else if (ping < 100) {
             color = 2;
         } else if (ping < 250) {
             color = 1;
         } else color = 0;
-        serverPing.addClass(colors[color]);
+        serverPing.addClass(textColors[color]);
     }
 
     servers[id].ping = ping;
@@ -29,10 +42,11 @@ function setPing(id, ping) { // null for N/A, number for ms
 function setStatus(id, status) { // 0: offline, 1: connecting, 2: online
     const serverName = servers[id].serverName;
     const serverStatus = $(`#${serverName}-status`);
+    const serverPing = $(`#${serverName}-ping`);
 
-    for (const color of colors) serverStatus.removeClass(color);
-    serverStatus.text(['Offline', 'Connecting', 'Online'][status]);
-    serverStatus.addClass(colors[status]);
+    for (const color of backgroundColors) serverStatus.removeClass(color);
+    serverStatus.addClass(backgroundColors[status]);
+    if (status !== 2) serverPing.text(['Disconnected', 'Connecting'][status]);
 
     servers[id].status = status;
 }
@@ -74,14 +88,12 @@ function createWebsocket(id) {
 function initializeServer(server) {
     const serverName = server.name.toLowerCase().replaceAll(' ', '-');
     $('#servers').append(`
-        <div class="border border-neutral-300 py-2 px-4 rounded mb-2 flex flex-row justify-between" id="${serverName}">
+        <div class="border border-neutral-600 bg-neutral-800 py-1.5 px-4 rounded-full mb-2 flex flex-row justify-between" id="${serverName}">
             <div>
-                <h3>${server.name}</h3>
-                <p>Status: <span class="font-medium text-red-400" id="${serverName}-status">Offline</span></p>
+                <span class="bg-red-400 p-2 mr-1 relative top-0.5 rounded-full inline-block" id="${serverName}-status"></span>
+                <span class="inline-block">${server.name}</span>
             </div>
-            <div>
-                <p class="text-green-400" id="${serverName}-ping"></p>
-            </div>
+            <p class="text-red-400" id="${serverName}-ping"></p>
         </div>
     `);
     const id = servers.length;
@@ -106,18 +118,15 @@ $(document).ready(() => {
         },
         success: (data) => {
             $('#loading-text').addClass('fade-transparent');
-            $('#servers').removeClass('fade-transparent');
+            $('#servers-parent').removeClass('fade-transparent');
             for (const server of data) {
                 initializeServer(server);
             }
         }
     });
 
-    setInterval(() => {
-        for (const server of servers) {
-            if (server.status === 2) {
-                sendPing(server.ws);
-            }
-        }
-    }, 5000);
+    $('#interval').on('change', () => {
+        setPingInterval(parseInt($('#interval').val()));
+    });
+    setPingInterval(5);
 });

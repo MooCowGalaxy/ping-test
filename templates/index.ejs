@@ -12,13 +12,21 @@
         <script src="/static/js/index.js"></script>
     </head>
     <body class="w-screen">
-        <div class="max-w-3xl min-h-screen md:border-x border-neutral-300 mx-auto p-4">
+        <div class="max-w-3xl min-h-screen md:border-x border-neutral-800 bg-neutral-900 mx-auto p-4">
             <h1 class="text-3xl font-semibold">Ping Tester</h1>
-            <p class="mb-6">Measure the round trip time of your connection to all of my servers!</p>
-            <p class="text-center fade mb-4" id="loading-text">Please wait, fetching servers...</p>
-            <div class="fade fade-transparent" id="servers">
+            <p class="mb-4 text-neutral-300">Measure the round trip time of your connection to all of my servers!</p>
+            <p class="text-center fade mb-2" id="loading-text">Please wait, fetching servers...</p>
+            <div class="fade fade-transparent" id="servers-parent">
+                <label for="interval" class="inline-block mb-1 text-neutral-300 text-md font-lg">Ping interval: </label>
+                <select id="interval" class="bg-neutral-800 border border-neutral-600 text-neutral-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 inline px-1.5 py-1 mb-2">
+                    <option value="1">1 second</option>
+                    <option value="2">2 seconds</option>
+                    <option value="5" selected>5 seconds</option>
+                    <option value="10">10 seconds</option>
+                </select>
                 <h2 class="text-2xl">Servers</h2>
-                <hr class="mb-2">
+                <hr class="mb-2 border-neutral-700">
+                <div id="servers"></div>
             </div>
         </div>
     </body>

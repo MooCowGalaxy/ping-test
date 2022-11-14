@@ -3,6 +3,19 @@ const backgroundColors = ['bg-red-400', 'bg-amber-400', 'bg-green-400'];
 const textColors = ['text-red-400', 'text-amber-400', 'text-green-400'];
 let interval;
 
+function updateOnlineCount() {
+    const onlineCountSpan = $('#online-count');
+
+    const online = servers.filter(server => server.status === 2).length;
+    const total = servers.length;
+
+    let color;
+    if (online === total) color = 2;
+    else if (online > 0) color = 1;
+    else color = 0;
+
+    onlineCountSpan.html(`(<span class="${textColors[color]}">${online}/${total}</span> servers online)`);
+}
 function setPingInterval(seconds = 5) {
     if (interval !== undefined) clearInterval(interval);
     interval = setInterval(() => {
@@ -20,20 +33,26 @@ function sendPing(ws) {
         console.error(e);
     }
 }
-function setPing(id, ping) { // null for N/A, number for ms (-1 for connecting)
+function setPing(id, ping) { // null for disconnected, number for ms (-1 for connecting, -2 for N/A)
     const serverName = servers[id].serverName;
     const serverPing = $(`#${serverName}-ping`);
 
     for (const color of textColors) serverPing.removeClass(color);
-    serverPing.text(ping === null ? 'N/A' : ping === -1 ? 'Connecting' : `${ping}ms`);
-    if (ping !== null) {
+
+    let pingText;
+    if (ping === null) pingText = 'Disconnected';
+    else if (ping === -1) pingText = 'Connecting';
+    else if (ping === -2) pingText = 'N/A';
+    else pingText = `${ping}ms`;
+    serverPing.text(pingText);
+
+    if (ping !== -2) {
         let color;
-        if (ping === -1) {
-        } else if (ping < 100) {
-            color = 2;
-        } else if (ping < 250) {
-            color = 1;
-        } else color = 0;
+        if (ping === null) color = 0;
+        else if (ping === -1) color = 1;
+        else if (ping < 100) color = 2;
+        else if (ping < 250) color = 1;
+        else color = 0;
         serverPing.addClass(textColors[color]);
     }
 
@@ -42,13 +61,13 @@ function setPing(id, ping) { // null for N/A, number for ms (-1 for connecting)
 function setStatus(id, status) { // 0: offline, 1: connecting, 2: online
     const serverName = servers[id].serverName;
     const serverStatus = $(`#${serverName}-status`);
-    const serverPing = $(`#${serverName}-ping`);
 
     for (const color of backgroundColors) serverStatus.removeClass(color);
     serverStatus.addClass(backgroundColors[status]);
-    if (status !== 2) serverPing.text(['Disconnected', 'Connecting'][status]);
+    if (status === 2) setPing(id, -2);
 
     servers[id].status = status;
+    updateOnlineCount();
 }
 function createWebsocket(id) {
     const server = servers[id];
@@ -58,7 +77,7 @@ function createWebsocket(id) {
 
     const ws = new WebSocket(`${connectionType}://${server.domain}`);
     setStatus(id, 1);
-    setPing(id, null);
+    setPing(id, -1);
 
     ws.onopen = () => {
         setStatus(id, 2);

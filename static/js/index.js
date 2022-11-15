@@ -10,11 +10,13 @@ function sortServers() {
     if (!isSorted) return;
 
     const setPing = x => {
-        x.ping = Infinity;
+        if (x.ping === null || x.ping < 0) {
+            x.ping = Infinity;
+        }
         return x;
     };
 
-    const sorted = servers.map(x => x !== null && x.ping > -1 ? x : setPing(x)).sort((a, b) => a.ping === Infinity && b.ping === Infinity ? 0 : a.ping - b.ping);
+    const sorted = servers.map(x => setPing(x)).sort((a, b) => a.ping === Infinity && b.ping === Infinity ? 0 : a.ping - b.ping);
 
     for (let i = 0; i < sorted.length; i++) {
         const cur = sorted[i];

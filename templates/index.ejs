@@ -28,9 +28,23 @@
                     <option value="5" selected>5 seconds</option>
                     <option value="10">10 seconds</option>
                 </select>
-                <h2 class="text-2xl">Servers <span class="text-sm" id="online-count">(0/0 servers online)</span></h2>
+                <div class="flex flex-row justify-between">
+                    <p class="text-2xl w-max">Servers <span class="text-sm" id="online-count">(0/0 servers online)</span></p>
+                    <div class="flex items-center justify-center relative">
+                        <label for="sort-speed" class="flex items-center cursor-pointer absolute w-max h-fit bottom-0 right-0">
+                            <span class="mr-2 text-neutral-300 font-medium">Sort by speed</span>
+                            <div class="relative">
+                                <input id="sort-speed" type="checkbox" class="sr-only" />
+                                <div class="w-8 h-4 bg-neutral-800 border border-neutral-700 rounded-full shadow-inner"></div>
+                                <div class="dot absolute w-3 h-3 bg-white rounded-full shadow left-0.5 top-0.5 transition"></div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
                 <hr class="mb-2 border-neutral-700">
-                <div id="servers"></div>
+                <div id="servers">
+                    <div class="relative w-full" id="servers-sort"></div>
+                </div>
             </div>
         </div>
     </body>

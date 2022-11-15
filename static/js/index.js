@@ -1,8 +1,38 @@
-const servers = []; // {name, serverName, domain, ws, status, ping}
+const PILL_OFFSET = 46;
+
+const servers = []; // {id, name, serverName, domain, ws, status, ping}
 const backgroundColors = ['bg-red-400', 'bg-amber-400', 'bg-green-400'];
 const textColors = ['text-red-400', 'text-amber-400', 'text-green-400'];
 let interval;
+let isSorted = false;
 
+function sortServers() {
+    if (!isSorted) return;
+
+    const setPing = x => {
+        x.ping = Infinity;
+        return x;
+    };
+
+    const sorted = servers.map(x => x.ping > -1 ? x : setPing(x)).sort((a, b) => a.ping === Infinity && b.ping === Infinity ? 0 : a.ping - b.ping);
+
+    for (let i = 0; i < sorted.length; i++) {
+        const cur = sorted[i];
+        $(`#${cur.serverName}`).css('transform', `translateY(${PILL_OFFSET * i}px)`);
+    }
+}
+function setSort(sorted = false) {
+    isSorted = sorted;
+
+    if (sorted) {
+        sortServers();
+    } else {
+        for (let i = 0; i < servers.length; i++) {
+            const server = servers[i];
+            $(`#${server.serverName}`).css('transform', `translateY(${PILL_OFFSET * i}px)`);
+        }
+    }
+}
 function updateOnlineCount() {
     const onlineCountSpan = $('#online-count');
 
@@ -57,6 +87,8 @@ function setPing(id, ping) { // null for disconnected, number for ms (-1 for con
     }
 
     servers[id].ping = ping;
+
+    sortServers();
 }
 function setStatus(id, status) { // 0: offline, 1: connecting, 2: online
     const serverName = servers[id].serverName;
@@ -106,8 +138,8 @@ function createWebsocket(id) {
 }
 function initializeServer(server) {
     const serverName = server.name.toLowerCase().replaceAll(' ', '-');
-    $('#servers').append(`
-        <div class="border border-neutral-600 bg-neutral-800 py-1.5 px-4 rounded-full mb-2 flex flex-row justify-between" id="${serverName}">
+    $('#servers-sort').append(`
+        <div class="server border border-neutral-600 bg-neutral-800 py-1.5 px-4 rounded-full mb-2 flex flex-row justify-between transition-transform ease-out duration-300 w-full absolute" id="${serverName}" style="transform: translateY(${PILL_OFFSET * server.id}px)">
             <div>
                 <span class="bg-red-400 p-2 mr-1 relative top-0.5 rounded-full inline-block" id="${serverName}-status"></span>
                 <span class="inline-block">${server.name}</span>
@@ -138,14 +170,20 @@ $(document).ready(() => {
         success: (data) => {
             $('#loading-text').addClass('fade-transparent');
             $('#servers-parent').removeClass('fade-transparent');
-            for (const server of data) {
-                initializeServer(server);
+            // $('#servers').append(`<div style="height: ${PILL_OFFSET * data.length}px;"></div>`);
+            for (let i = 0; i < data.length; i++) {
+                const server = data[i];
+                initializeServer({id: i, ...server});
             }
+            setSort(false);
         }
     });
 
     $('#interval').on('change', () => {
         setPingInterval(parseInt($('#interval').val()));
+    });
+    $('#sort-speed').change(function () {
+        setSort(this.checked);
     });
     setPingInterval(5);
 });

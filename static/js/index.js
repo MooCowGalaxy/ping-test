@@ -44,7 +44,7 @@ function updateOnlineCount() {
     else if (online > 0) color = 1;
     else color = 0;
 
-    onlineCountSpan.html(`(<span class="${textColors[color]}">${online}/${total}</span> servers online)`);
+    onlineCountSpan.html(`(<span class="${textColors[color]}">${online}/${total}</span> online)`);
 }
 function setPingInterval(seconds = 5) {
     if (interval !== undefined) clearInterval(interval);

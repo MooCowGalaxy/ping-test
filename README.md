@@ -3,6 +3,16 @@
 ![img.png](img.png)
 A simple website to track the ping of all your servers. View it live [here](https://ping.moocow.dev)!
 
+## Table of Contents
+- [Installation](#installation)
+  - [Frontend](#frontend-nodejs-webserver)
+  - [Backend](#backend-websocket)
+  - [Adding websocket servers](#adding-websocket-servers)
+  - [Enabling SSL](#enabling-ssl)
+    - [nginx example (frontend)](#example-steps-for-nginx-for-frontend-server)
+    - [nginx example (backend)](#example-steps-for-nginx-for-websocket-server)
+- [Supporting me](#supporting-me)
+
 ## Installation
 ### Frontend (Node.js webserver)
 1. Install [node.js v16](https://nodejs.org/download/release/v16.18.1/) or higher
@@ -28,6 +38,7 @@ WantedBy=multi-user.target
 ```
 6. (Optional) Run `sudo systemctl daemon-reload && sudo systemctl enable --now ping-frontend` to run the server on startup.
 ### Backend websocket
+Install the websocket server on every server that you want to add to the ping test list.
 1. Install [node.js v16](https://nodejs.org/download/release/v16.18.1/) or higher
 2. Run `npm install`
 3. Copy `config.js.example` to `config.js` to create the configuration file, and edit the websocket port if needed

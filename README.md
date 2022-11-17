@@ -49,7 +49,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
-6. (Optional) Run `sudo systemctl daemon-reload && sudo systemctl enable --now ping-frontend` to run the server on startup.
+6. (Optional) Run `sudo systemctl daemon-reload && sudo systemctl enable --now ping-ws` to run the server on startup.
 ### Adding websocket servers
 Once you've set up the frontend and websocket backend, you need to add the websocket server to the `config.js` file in the frontend:
 

@@ -57,7 +57,43 @@ Add a new entry to the servers list in `config.js`. The name can be anything you
 ### Enabling SSL
 If you would like to use SSL for the frontend, you will need a reverse proxy like nginx. You also will need a [FQDN](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) for every websocket server and valid SSL certificates.
 
-Example steps for nginx (run these commands on your websocket server):
+#### Example steps for nginx (for frontend server):
+1. Install [certbot](https://certbot.eff.org/) and the certbot nginx plugin
+2. Obtain a certificate for the FQDN using the nginx plugin (`certbot certonly -d "ping.example.com"`)
+3. Create/update the nginx config for the frontend server, example:
+```
+server {
+    server_name ping.example.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/ping.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ping.example.com/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+server {
+    if ($host = ping.example.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    server_name ping.example.com;
+
+    listen 80;
+    return 404; # managed by Certbot
+}
+```
+#### Example steps for nginx (for websocket server):
 1. Install [certbot](https://certbot.eff.org/) and the certbot nginx plugin
 2. Obtain a certificate for the FQDN using the nginx plugin (`certbot certonly -d "us-west1.example.com"`)
 3. Create/update the nginx config file for the websocket server, example:

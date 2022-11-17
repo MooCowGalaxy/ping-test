@@ -1,7 +1,7 @@
 # Ping Tester
 
 ![img.png](img.png)
-A simple website to track the ping of all your servers.
+A simple website to track the ping of all your servers. View it live [here](https://ping.moocow.dev)!
 
 ## Installation
 ### Frontend (Node.js webserver)

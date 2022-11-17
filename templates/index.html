@@ -15,7 +15,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="/static/js/index.js"></script>
     </head>
-    <body class="w-screen">
+    <body>
         <div class="max-w-3xl min-h-screen md:border-x border-neutral-800 bg-neutral-900 mx-auto p-4">
             <h1 class="text-3xl font-semibold">Ping Tester</h1>
             <p class="mb-2 text-neutral-300">Measure the round trip time of your connection to all of my servers!</p>
@@ -44,6 +44,10 @@
                 <hr class="mb-2 border-neutral-700">
                 <div id="servers">
                     <div class="relative w-full" id="servers-sort"></div>
+                    <div class="w-full" id="spacer"></div>
+                    <div class="flex justify-center">
+                        <a href="https://github.com/MooCowGalaxy/ping-test" class="w-full text-center text-sm text-sky-500 underline" target="_blank" rel="noopener noreferrer">View source on GitHub!</a>
+                    </div>
                 </div>
             </div>
         </div>

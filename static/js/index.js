@@ -173,6 +173,7 @@ $(document).ready(() => {
             $('#loading-text').addClass('fade-transparent');
             $('#servers-parent').removeClass('fade-transparent');
             // $('#servers').append(`<div style="height: ${PILL_OFFSET * data.length}px;"></div>`);
+            $('#spacer').css('height', `${PILL_OFFSET * data.length}px`);
             for (let i = 0; i < data.length; i++) {
                 const server = data[i];
                 initializeServer({id: i, ...server});

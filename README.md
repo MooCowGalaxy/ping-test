@@ -26,6 +26,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
+6. (Optional) Run `sudo systemctl daemon-reload && sudo systemctl enable --now ping-frontend` to run the server on startup.
 ### Backend websocket
 1. Install [node.js v16](https://nodejs.org/download/release/v16.18.1/) or higher
 2. Run `npm install`
@@ -48,6 +49,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
+6. (Optional) Run `sudo systemctl daemon-reload && sudo systemctl enable --now ping-frontend` to run the server on startup.
 ### Adding websocket servers
 Once you've set up the frontend and websocket backend, you need to add the websocket server to the `config.js` file in the frontend:
 
